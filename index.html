@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="logo-container">
       <i class="fas fa-truck fa-lg"></i>
@@ -42,43 +41,235 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <!-- Halaman Pelanggan -->
+    <!-- HALAMAN PELANGGAN -->
     <section id="customersPage" class="page active">
-      <!-- ... -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2><i class="fas fa-users"></i> Daftar Pelanggan</h2>
+          <button class="btn btn-primary" onclick="openCustomerModal(null)">
+            <i class="fas fa-plus"></i> Pelanggan Baru
+          </button>
+        </div>
+        <div class="search-container">
+          <input type="text" id="customerSearch" placeholder="Cari pelanggan..." oninput="filterCustomers()" />
+          <button class="btn btn-secondary" onclick="document.getElementById('customerSearch').value = ''; filterCustomers()">
+            <i class="fas fa-times"></i> Reset
+          </button>
+        </div>
+        <table id="customersTable">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Alamat</th>
+              <th>No. HP</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="noCustomers" class="empty-state" style="display: none;">
+          <i class="fas fa-user-slash"></i>
+          <h3>Tidak Ada Pelanggan</h3>
+          <p>Tambahkan pelanggan baru untuk memulai</p>
+          <button class="btn btn-primary" style="margin-top: 20px;" onclick="openCustomerModal(null)">
+            <i class="fas fa-plus"></i> Tambah Pelanggan
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- Halaman Tiket -->
+    <!-- HALAMAN TIKET -->
     <section id="ticketsPage" class="page">
-      <!-- ... -->
+      <div class="card">
+        <div class="customer-tickets-header" id="customerTicketsHeader" style="display: none;">
+          <button class="btn btn-secondary btn-sm" onclick="showAllTickets()">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h2 id="customerTicketsTitle"></h2>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 id="ticketsTitle"><i class="fas fa-ticket-alt"></i> Daftar Tiket</h2>
+          <div class="desktop-actions">
+            <button class="btn btn-secondary" onclick="showPage('customersPage')">
+              <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            <button class="btn btn-primary" onclick="openModal()" style="margin-left: 10px;">
+              <i class="fas fa-plus"></i> Tiket Baru
+            </button>
+          </div>
+        </div>
+        <div class="mobile-actions">
+          <button class="btn btn-secondary" onclick="showPage('customersPage')" style="flex: 1;">
+            <i class="fas fa-arrow-left"></i> Kembali
+          </button>
+          <button class="btn btn-primary" onclick="openModal()" style="flex: 1; margin-left: 10px;">
+            <i class="fas fa-plus"></i> Tiket Baru
+          </button>
+        </div>
+        <div class="search-container">
+          <input type="text" id="ticketSearch" placeholder="Cari tiket..." oninput="filterTickets()" />
+          <button class="btn btn-secondary" onclick="document.getElementById('ticketSearch').value = ''; filterTickets()">
+            <i class="fas fa-times"></i> Reset
+          </button>
+        </div>
+        <div class="filter-container">
+          <button class="filter-btn" data-status="all" onclick="filterTickets('all')">Semua</button>
+          <button class="filter-btn" data-status="open" onclick="filterTickets('open')">Open</button>
+          <button class="filter-btn" data-status="onprogress" onclick="filterTickets('onprogress')">On Progress</button>
+          <button class="filter-btn" data-status="pending" onclick="filterTickets('pending')">Pending</button>
+          <button class="filter-btn" data-status="selesai" onclick="filterTickets('selesai')">Selesai</button>
+        </div>
+        <table id="ticketsTable">
+          <thead>
+            <tr>
+              <th>ID Tiket</th>
+              <th>Status</th>
+              <th>Judul</th>
+              <th>Pelanggan</th>
+              <th>Rencana</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="noTickets" class="empty-state" style="display: none;">
+          <i class="fas fa-ticket-alt"></i>
+          <h3>Tidak Ada Tiket</h3>
+          <p>Buat tiket baru untuk memulai</p>
+          <button class="btn btn-primary" style="margin-top: 20px;" onclick="openModal()">
+            <i class="fas fa-plus"></i> Buat Tiket
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- Halaman Google Sheets -->
+    <!-- HALAMAN GOOGLE SHEETS -->
     <section id="googlePage" class="page">
-      <!-- ... -->
+      <div class="integration-card">
+        <div class="integration-header">
+          <i class="fab fa-google fa-2x"></i>
+          <h2>Integrasi Google Sheets</h2>
+        </div>
+        <p>Kirim data tiket pengantaran ke Google Sheets untuk penyimpanan dan analisis lebih lanjut.</p>
+        <div class="form-group">
+          <label for="googleSheetUrl">URL Google Sheet:</label>
+          <input type="text" id="googleSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/..." />
+          <div class="help-text">Salin URL spreadsheet Google Sheets Anda</div>
+        </div>
+        <div class="form-group">
+          <label for="sheetName">Nama Sheet:</label>
+          <input type="text" id="sheetName" value="Data Tiket" />
+          <div class="help-text">Nama sheet dalam spreadsheet (default: Data Tiket)</div>
+        </div>
+        <div class="form-group">
+          <label for="apiKey">Kunci API (Opsional):</label>
+          <input type="text" id="apiKey" placeholder="Kunci API Anda" />
+          <div class="help-text">Jika menggunakan Google Apps Script untuk keamanan</div>
+        </div>
+        <button class="btn btn-google" onclick="saveGoogleConfig()">
+          <i class="fas fa-save"></i> Simpan Konfigurasi
+        </button>
+        <div style="margin-top: 30px; border-top: var(--border); padding-top: 20px;">
+          <h3><i class="fas fa-cloud-upload-alt"></i> Kirim Data ke Google Sheets</h3>
+          <p>Kirim semua data tiket ke Google Sheets yang telah dikonfigurasi.</p>
+          <div class="action-buttons" style="margin-top: 15px;">
+            <button class="btn btn-google" onclick="syncToGoogleSheets()" id="syncButton">
+              <i class="fas fa-sync"></i> Sinkronkan Sekarang
+            </button>
+            <button class="btn btn-secondary" onclick="testGoogleConnection()">
+              <i class="fas fa-plug"></i> Uji Koneksi
+            </button>
+          </div>
+          <div id="syncStatus" style="margin-top: 15px; padding: 10px; border-radius: var(--radius); display: none;"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2><i class="fas fa-history"></i> Riwayat Sinkronisasi</h2>
+        <table id="syncHistoryTable">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Status</th>
+              <th>Jumlah Tiket</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="noSyncHistory" class="empty-state" style="display: none;">
+          <i class="fas fa-history"></i>
+          <h3>Belum Ada Riwayat Sinkronisasi</h3>
+          <p>Sinkronkan data Anda untuk memulai</p>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- Modal Pelanggan -->
+  <!-- MODAL PELANGGAN -->
   <div id="customerModal" class="modal">
-    <!-- ... -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="customerModalTitle">Tambah Pelanggan Baru</h3>
+        <button class="close-btn" onclick="closeCustomerModal()">&times;</button>
+      </div>
+      <form id="customerForm">
+        <input type="hidden" id="customerId">
+        <label>Nama Pelanggan</label>
+        <input type="text" id="customerNama" required />
+        <label>Alamat</label>
+        <textarea id="customerAlamat" rows="2" required></textarea>
+        <label>No. HP</label>
+        <input type="tel" id="customerHp" required />
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeCustomerModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- Modal Tiket -->
+  <!-- MODAL TIKET -->
   <div id="ticketModal" class="modal">
-    <!-- ... -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Buat Tiket Pengantaran</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="ticketForm">
+        <label>Pilih Pelanggan</label>
+        <select id="formCustomer" required>
+          <option value="">-- Pilih Pelanggan --</option>
+        </select>
+        <label>Judul Tiket</label>
+        <input type="text" id="formJudul" required />
+        <label>Deskripsi</label>
+        <textarea id="formDeskripsi" rows="3" required></textarea>
+        <label>Waktu Pengerjaan</label>
+        <input type="datetime-local" id="formWaktu" required />
+        <label>Pelaksana</label>
+        <input type="text" id="formPelaksana" required />
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Kirim Tiket</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- Modal Detail Tiket -->
+  <!-- MODAL DETAIL TIKET -->
   <div id="detailModal" class="modal">
-    <!-- ... -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detail Tiket</h3>
+        <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div id="ticketDetailContent" style="line-height: 1.8;"></div>
+    </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast"></div>
-
-  <!-- Main JS -->
   <script src="main.js"></script>
 </body>
 </html>
